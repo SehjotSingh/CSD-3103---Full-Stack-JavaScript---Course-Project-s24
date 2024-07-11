@@ -9,7 +9,8 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB connection
-mongoose.connect('your-mongodb-connection-string', {
+const mongoURI = 'mongodb://localhost:27017/mydatabase';
+mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => console.log('MongoDB connected'))
