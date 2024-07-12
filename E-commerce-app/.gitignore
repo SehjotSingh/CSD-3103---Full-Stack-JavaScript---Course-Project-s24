@@ -1,0 +1,17 @@
+# Ignore node_modules directories
+/backend/node_modules
+/frontend/node_modules
+/node_modules
+
+# Ignore data directory
+/backend/data/db
+
+# Ignore package-lock.json files if you do not want to track them
+/backend/package-lock.json
+/frontend/package-lock.json
+
+# Ignore any IDE/editor configuration files (e.g., for JetBrains IDEs)
+.idea/
+
+# Ignore log files
+*.log
