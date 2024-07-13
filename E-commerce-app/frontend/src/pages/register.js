@@ -12,12 +12,11 @@ const RegistrationForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle registration logic here
-        // Show popup on success or failure
+
         setPopup({ show: true, message: 'Registration successful!', type: 'success' });
         setTimeout(() => {
             router.push('/dashboard');
-        }, 2000); // Adjust the timeout as needed
+        }, 2000);
     };
 
     return (

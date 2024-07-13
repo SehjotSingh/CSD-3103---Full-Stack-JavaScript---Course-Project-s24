@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const mongoURI = 'mongodb://localhost:27017/mydatabase';  // Adjust the database name if needed
+const mongoURI = 'mongodb://localhost:27017/mydatabase';
 
 mongoose.connect(mongoURI).then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
