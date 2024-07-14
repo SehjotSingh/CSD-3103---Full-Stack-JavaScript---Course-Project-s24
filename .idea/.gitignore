@@ -37,3 +37,8 @@ Thumbs.db
 
 # Ignore eslint cache
 .eslintcache
+
+# Ignore package-lock.json
+E-commerce-app/package-lock.json
+E-commerce-app/backend/package-lock.json
+E-commerce-app/frontend/package-lock.json
