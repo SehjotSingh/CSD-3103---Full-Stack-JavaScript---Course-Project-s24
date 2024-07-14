@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import Popup from '../components/Popup';
 
 const RegistrationForm = () => {
@@ -10,13 +11,24 @@ const RegistrationForm = () => {
     const [popup, setPopup] = useState({ show: false, message: '', type: '' });
     const router = useRouter();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        setPopup({ show: true, message: 'Registration successful!', type: 'success' });
-        setTimeout(() => {
-            router.push('/dashboard');
-        }, 2000);
+        try {
+            const res = await axios.post('http://localhost:5000/api/users/register', {
+                fullName,
+                email,
+                password,
+                address
+            });
+
+            setPopup({ show: true, message: 'Registration successful!', type: 'success' });
+            setTimeout(() => {
+                router.push('/dashboard');
+            }, 2000);
+        } catch (error) {
+            setPopup({ show: true, message: error.response.data.msg, type: 'error' });
+        }
     };
 
     return (
