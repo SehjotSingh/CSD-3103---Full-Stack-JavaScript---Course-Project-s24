@@ -9,23 +9,30 @@ const LoginForm = () => {
     const router = useRouter();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();  // Prevent the form from submitting and causing a page reload
+        e.preventDefault();
+        console.log("Form submitted");
+
         try {
             const res = await axios.post('http://localhost:5000/api/users/login', {
                 email,
                 password,
             });
+            console.log("Response:", res);
 
             if (res.data) {
-                // Assuming successful login redirects to dashboard
-                router.push('/dashboard');
+                console.log("Login successful, redirecting...");
+                await router.push('/dashboard');
+                console.log("Redirected to dashboard");
             } else {
+                console.log("Login failed, no data returned.");
                 throw new Error('Login failed');
             }
         } catch (error) {
+            console.error("Error during login:", error);
             setErrorMessage(error.response?.data?.msg || 'Login failed. Please try again.');
         }
     };
+
 
     return (
         <div>
@@ -51,8 +58,8 @@ const LoginForm = () => {
                 </div>
                 <button type="submit">Login</button>
                 {errorMessage && <div>{errorMessage}</div>}
+                <a href="/register">Don't have an account? Register here</a>
             </form>
-            <a href="/register">Don't have an account? Register here</a>
         </div>
     );
 };

@@ -1,4 +1,3 @@
-import withAuth from '../utils/withAuth';
 import { useRouter } from 'next/router';
 
 const Dashboard = () => {
@@ -16,5 +15,4 @@ const Dashboard = () => {
         </div>
     );
 };
-
-export default withAuth(Dashboard);
+export default Dashboard;
