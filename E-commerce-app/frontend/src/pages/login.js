@@ -1,24 +1,29 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault();  // Prevent the form from submitting and causing a page reload
         try {
             const res = await axios.post('http://localhost:5000/api/users/login', {
                 email,
-                password
+                password,
             });
-            // Assuming successful login redirects to dashboard or another route
+
             if (res.data) {
-                // Handle successful login (e.g., redirect to dashboard)
+                // Assuming successful login redirects to dashboard
+                router.push('/dashboard');
+            } else {
+                throw new Error('Login failed');
             }
         } catch (error) {
-            setErrorMessage(error.response.data.msg || 'Login failed. Please try again.');
+            setErrorMessage(error.response?.data?.msg || 'Login failed. Please try again.');
         }
     };
 
@@ -45,8 +50,8 @@ const LoginForm = () => {
                     />
                 </div>
                 <button type="submit">Login</button>
+                {errorMessage && <div>{errorMessage}</div>}
             </form>
-            {errorMessage && <div>{errorMessage}</div>}
             <a href="/register">Don't have an account? Register here</a>
         </div>
     );

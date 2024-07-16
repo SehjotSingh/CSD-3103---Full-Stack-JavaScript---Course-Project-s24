@@ -7,11 +7,13 @@ const authRoutes = require('./routes/auth');
 const app = express();
 
 // Connect Database
-connectDB().then(r => console.log('Connected to MongoDB'));
+connectDB().then(() => {
+    console.log('Connected to MongoDB');
+});
 
 // Init Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000' }));
 
 // Define Routes
 app.use('/api/users', authRoutes);

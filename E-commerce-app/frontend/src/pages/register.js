@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 import axios from 'axios';
 import Popup from '../components/Popup';
+import { useRouter } from 'next/router';
 
 const RegistrationForm = () => {
     const [fullName, setFullName] = useState('');
@@ -13,21 +13,28 @@ const RegistrationForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const res = await axios.post('http://localhost:5000/api/users/register', {
                 fullName,
                 email,
                 password,
-                address
+                address,
             });
 
-            setPopup({ show: true, message: 'Registration successful!', type: 'success' });
-            setTimeout(() => {
-                router.push('/dashboard');
-            }, 2000);
+            if (res.data) {
+                setPopup({ show: true, message: 'Registration successful', type: 'success' });
+                setTimeout(() => {
+                    router.push('/dashboard');
+                }, 2000);
+            } else {
+                throw new Error('Registration failed');
+            }
         } catch (error) {
-            setPopup({ show: true, message: error.response.data.msg, type: 'error' });
+            setPopup({
+                show: true,
+                message: error.response?.data?.msg || 'Registration failed. Please try again.',
+                type: 'error',
+            });
         }
     };
 
@@ -72,8 +79,8 @@ const RegistrationForm = () => {
                     />
                 </div>
                 <button type="submit">Register</button>
+                {popup.show && <Popup message={popup.message} type={popup.type} />}
             </form>
-            {popup.show && <Popup message={popup.message} type={popup.type} />}
         </div>
     );
 };
