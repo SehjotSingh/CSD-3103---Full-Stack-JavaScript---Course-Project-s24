@@ -8,6 +8,7 @@
 # Datasource local storage ignored files
 /DataSources/
 /dataSources.local.xml
+E-comerce-app/backend/data/db
 
 # Node modules
 node_modules/
