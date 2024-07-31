@@ -1,17 +1,24 @@
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = 'your_secret_key'; // Use an environment variable in production
 
-const auth = (req, res, next) => {
-    const token = req.header('x-auth-token');
+const JWT_SECRET = 'your_secret_key_here'; // Replace with your own secret key
+
+const authMiddleware = (req, res, next) => {
+    const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+    console.log('Token:', token); // Debugging log
     if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' });
+        console.log('No token found'); // Debugging log
+        return res.status(401).json({ msg: 'Unauthorized' });
     }
+
     try {
-        req.user = jwt.verify(token, SECRET_KEY);
+        const decoded = jwt.verify(token, JWT_SECRET);
+        console.log('Decoded Token:', decoded); // Debugging log
+        req.user = decoded;
         next();
-    } catch (e) {
-        res.status(400).json({ msg: 'Token is not valid' });
+    } catch (err) {
+        console.log('Token verification failed:', err); // Debugging log
+        res.status(401).json({ msg: 'Unauthorized' });
     }
 };
 
-module.exports = auth;
+module.exports = authMiddleware;

@@ -1,4 +1,3 @@
-// pages/login.js
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -8,6 +7,7 @@ import DarkModeToggle from '../components/DarkModeToggle';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [stayLoggedIn, setStayLoggedIn] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter();
 
@@ -19,11 +19,13 @@ const Login = () => {
             const res = await axios.post('http://localhost:5000/api/users/login', {
                 email,
                 password,
+                stayLoggedIn,
             });
             console.log("Response:", res);
 
             if (res.data) {
                 console.log("Login successful, redirecting...");
+                document.cookie = `token=${res.data.token}; path=/;`;
                 await router.push('/dashboard');
                 console.log("Redirected to dashboard");
             } else {
@@ -66,6 +68,16 @@ const Login = () => {
                             placeholder="Password"
                             required
                         />
+                    </div>
+                    <div className="flex items-center">
+                        <input
+                            type="checkbox"
+                            id="stayLoggedIn"
+                            className="mr-2 leading-tight"
+                            checked={stayLoggedIn}
+                            onChange={(e) => setStayLoggedIn(e.target.checked)}
+                        />
+                        <label htmlFor="stayLoggedIn" className="text-sm text-gray-700 dark:text-gray-300">Stay logged in</label>
                     </div>
                     <button
                         type="submit"
