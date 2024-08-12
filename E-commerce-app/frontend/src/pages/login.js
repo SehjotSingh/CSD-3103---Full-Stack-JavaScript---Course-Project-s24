@@ -20,12 +20,13 @@ const Login = () => {
                 email,
                 password,
                 stayLoggedIn,
+            }, {
+                withCredentials: true,  // Ensures cookies are sent and received
             });
             console.log("Response:", res);
 
             if (res.data) {
                 console.log("Login successful, redirecting...");
-                document.cookie = `token=${res.data.token}; path=/;`;
                 await router.push('/dashboard');
                 console.log("Redirected to dashboard");
             } else {

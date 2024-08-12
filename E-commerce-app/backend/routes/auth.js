@@ -70,29 +70,38 @@ router.post(
     }
 );
 
-// Login
+
 router.post('/login', async (req, res) => {
     const { email, password, stayLoggedIn } = req.body;
+
     try {
         const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ msg: 'User does not exist' });
+        if (!user) {
+            return res.status(400).json({ msg: 'User does not exist' });
+        }
 
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
+        if (!isMatch) {
+            return res.status(400).json({ msg: 'Invalid credentials' });
+        }
 
         const token = jwt.sign({ id: user._id }, JWT_SECRET, {
             expiresIn: stayLoggedIn ? '7d' : '1h',
         });
 
-        res.cookie('token', token, {
+        const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: stayLoggedIn ? 7 * 24 * 60 * 60 * 1000 : 1 * 60 * 60 * 1000,
-        });
+            path: '/',
+        };
 
-        res.json({ token, user });
+        if (stayLoggedIn) {
+            cookieOptions.maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+        }
+
+        res.cookie('token', token, cookieOptions);
+        res.json({ token, user: { id: user._id, email: user.email } });
     } catch (err) {
-        console.error(err);
         res.status(500).json({ msg: 'Server error' });
     }
 });
